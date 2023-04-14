@@ -1,41 +1,53 @@
 <template>
-  <form class="addcard" @submit.prevent="addCardToList">
-      <input v-model="body"
-             type="text"
-             class="text-input"
-             placeholder="Add new card"
-      />
-      <button type="submit" class="add-button">
-        Add
-      </button>
-    </form>
-
+  <form :class="classList" @submit.prevent="addCardToList">
+    <input
+      v-model="body"
+      type="text"
+      class="text-input"
+      placeholder="Add new card"
+      @focusin="startEditing"
+      @focusout="finishEditing"
+    />
+    <button type="submit" class="add-button">Add</button>
+  </form>
 </template>
 <script>
-
 export default {
-  props:{
-    listIndex:{
-      type:Number,
-      required:true
-    }
+  props: {
+    listIndex: {
+      type: Number,
+      required: true,
+    },
   },
-  data(){
+  data() {
     return {
-      body:'',
-    }
+      body: "",
+      isEditing: false,
+    };
   },
-  methods:{
-    addCardToList(){
-      this.$store.dispatch(
-        'addCardToList',
-        {
-          body: this.body,
-          listIndex: this.listIndex
-        }
-        )
-      this.body = ''
-    }
-  }
-}
+  methods: {
+    addCardToList() {
+      this.$store.dispatch("addCardToList", {
+        body: this.body,
+        listIndex: this.listIndex,
+      });
+      this.body = "";
+    },
+    startEditing() {
+      this.isEditing = true;
+    },
+    finishEditing() {
+      this.isEditing = false;
+    },
+  },
+  computed: {
+    classList() {
+      const classList = ["addcard"];
+      if (this.isEditing) {
+        classList.push("active");
+      }
+      return classList;
+    },
+  },
+};
 </script>
