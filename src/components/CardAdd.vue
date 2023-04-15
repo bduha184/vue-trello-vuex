@@ -8,7 +8,13 @@
       @focusin="startEditing"
       @focusout="finishEditing"
     />
-    <button type="submit" class="add-button">Add</button>
+    <button
+    type="submit"
+    class="add-button"
+    v-if="isEditing || bodyExists"
+    >
+    Add
+  </button>
   </form>
 </template>
 <script>
@@ -31,7 +37,6 @@ export default {
         body: this.body,
         listIndex: this.listIndex,
       });
-      this.body = "";
     },
     startEditing() {
       this.isEditing = true;
@@ -46,8 +51,14 @@ export default {
       if (this.isEditing) {
         classList.push("active");
       }
+      if(this.bodyExists) {
+        classList.push('addable')
+      }
       return classList;
     },
+    bodyExists(){
+      return this.body.length > 0
+    }
   },
 };
 </script>

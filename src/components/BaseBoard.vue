@@ -1,35 +1,42 @@
-
 <template>
   <div>
     <header>my Trello</header>
     <main>
-      <p class="info-line">All: 0 tasks</p>
+      <p class="info-line">All: {{ totalCardCount }} tasks</p>
       <div class="list-index">
-        <list v-for="(item, index) in lists"
-              :key="item.id"
-              :title="item.title"
-              :listIndex="index"
+        <TaskList
+          v-for="(item, index) in lists"
+          :key="item.id"
+          :title="item.title"
+          :cards="item.cards"
+          :listIndex="index"
+          @change="movingCard"
         />
-      <list-add/>
+        <ListAdd />
       </div>
     </main>
   </div>
 </template>
 
 <script>
-
-import ListAdd from './ListAdd.vue'
-import List from './TaskList.vue'
-import { mapState } from 'vuex';
-export default{
-  components:{
+import ListAdd from "./ListAdd.vue";
+import TaskList from "./TaskList.vue";
+import { mapState } from "vuex";
+export default {
+  components: {
     ListAdd,
-    List,
+    TaskList,
   },
-  computed:{
-    ...mapState([
-      'lists'
-  ]),
-  }
-}
+  methods:{
+    movingCard(){
+      this.$store.dispatch('updateList',{lists:this.lists})
+    }
+  },
+  computed: {
+    ...mapState(["lists"]),
+    totalCardCount(){
+      return this.$store.getters.totalCardCount
+    }
+  },
+};
 </script>
